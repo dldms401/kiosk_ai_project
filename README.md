@@ -1,0 +1,1 @@
+# kiosk_ai_project
