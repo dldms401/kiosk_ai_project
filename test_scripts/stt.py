@@ -98,5 +98,5 @@ if __name__ == "__main__":
         print(result)
 
         # 파일 삭제
-        file_path = "output.wav"
-        os.remove(file_path)
+        # file_path = "output.wav"
+        # os.remove(file_path)
