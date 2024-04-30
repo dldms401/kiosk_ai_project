@@ -8,10 +8,10 @@ from test_ai_stt import stt
 app = FastAPI()
 
 @app.post("/face-capture")
-async def face_recognition(file: UploadFile = File):
+async def face_recognition(img_file: UploadFile = File):
 
 
-    age = recog(file)
+    age = recog(img_file)
 
     return age
 

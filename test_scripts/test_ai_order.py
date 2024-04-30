@@ -1,5 +1,5 @@
 from langchain_openai.chat_models import ChatOpenAI
-from langchain.prompts import PromptTemplate
+from langchain.prompts import ChatPromptTemplate
 from langchain.prompts.few_shot import FewShotPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
@@ -21,36 +21,18 @@ llm = ChatOpenAI(
     )
 
 
-examples = [
-    {"question": "아메리카노를 줘",
-        "answer": "아메리카노를 주문하시겠습니까? 한잔당 4000원 입니다",
-    },
-    {"question": "네 주세요",
-        "answer": "따뜻한걸 원하시나요? 차가운걸 원하시나요?",
-    },
-    {"question": "차가운거요",
-        "answer": "네, 차가운거 추가하였습니다. 더 필요한게 있으시나요?",
-    },
-]
+template = ChatPromptTemplate.from_messages([
+    ("system", "너는 까페 알바생. 다음 순으로 주문을 받아. 1. 주문메뉴, 2. 옵션, 3. 수량. 확인해줘. 1. 주문메뉴 먼저 받아줘."),
+    ("human", "{menu}")
+])
 
 
-example_prompt = PromptTemplate.from_template(
-    "Human: {question}\nAI: {answer}"
-)
-
-# fewshot 프롬 템플릿 객체 생성.
-prompt = FewShotPromptTemplate(
-    example_prompt=example_prompt,
-    examples=examples,              # input type dic으로. fewshot lerning할 예시들 집합.
-    suffix="Human: {order}",
-    input_variables=["order"],
-)
-
-
-# 연결. 모델과 위의 프롬프트 템플릿까지. 나온 결과물을 스트링으로 
-chain = prompt | llm | StrOutputParser()
+chat = template | llm
 
 def order(str):
-    chain.invoke({"order" : str})
+    return chat.invoke({"menu" : str})
 
-    return 
+
+if __name__=="__main__":
+    while True:
+        print(order(input('human : ')))
