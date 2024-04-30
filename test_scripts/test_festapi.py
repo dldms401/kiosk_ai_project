@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 
 from test_ai_face_recog import recog
 from test_ai_order import order
-from test_ai_stt import stt
+from test_scripts.Xtest_ai_stt import stt
 
 
 app = FastAPI()
@@ -18,11 +18,11 @@ async def face_recognition(img_file: UploadFile = File):
 
 
 
-@app.post("/speech-to-text")
-async def speech_to_text(file: UploadFile = File):
-
-    # wav파일 읽고 텍스트로 추출, 텍스트를 읽고 답변 생성. json 포맷 만들기.
-    order(stt(file))
+@app.post("/order-ai")
+async def order_ai(string_data: str):
+    # 프론트 엔드에서 stt 하고 str 출력.
+    # 텍스트를 읽고 답변 생성. json 포맷 만들기.
+    order(string_data)
 
     # json
     return 
