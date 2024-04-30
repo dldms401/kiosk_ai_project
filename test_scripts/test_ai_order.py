@@ -16,21 +16,25 @@ _ = load_dotenv(find_dotenv())
 llm = ChatOpenAI(
     api_key=os.getenv("SERV_KEY"),
     # model_name="gpt-3.5-turbo", default값
-    temperature=0,
-    max_tokens=50
+    temperature=0.3,
+    max_tokens=80
     )
 
 
 template = ChatPromptTemplate.from_messages([
-    ("system", "너는 까페 알바생. 다음 순으로 주문을 받아. 1. 주문메뉴, 2. 옵션, 3. 수량. 확인해줘. 1. 주문메뉴 먼저 받아줘."),
-    ("human", "{menu}")
+    ("system", """너는 까페 알바생. 다음 순으로 친절하고 공손하게 주문을 받아. 
+     1. 주문메뉴, 2. 옵션(옵션은 오직 Hot 또는 Ice. 따뜻한거 아니면 차가운것 뿐), 3. 수량. 
+     이후, 답장이 돌아오면, 다시한번 주문메뉴, 옵션, 수량을 확인해.
+     만약 손님이 주문 완료같은 비슷한 문장을 말하면, 주문완료해줘."""),
+    
+    ("human", "{order}")
 ])
 
 
 chat = template | llm
 
 def order(str):
-    return chat.invoke({"menu" : str})
+    return chat.invoke({"order" : str})
 
 
 if __name__=="__main__":
