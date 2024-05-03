@@ -62,6 +62,7 @@ chain = LLMChain(
 def order(str):
     result = chain.predict(order = str)
 
+    # JSON 포맷으로 변환 가능한지 시도
     try:
         json_data = json.loads(result)
         return json_data
