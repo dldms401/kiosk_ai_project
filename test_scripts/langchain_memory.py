@@ -1,6 +1,5 @@
 from langchain_openai.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 
 from langchain.chains import LLMChain
 from langchain.prompts import MessagesPlaceholder
@@ -9,6 +8,7 @@ from langchain.memory import ConversationSummaryBufferMemory
 # langchain은 프롬프트 템플릿을 만들고 작업할 수 있는 도구를 제공함. =>Template
 # 빠른 참조. 프롬프트를 생성하기 위한 사전 정의 된 레시피. for 언어모델
 
+import json
 import os
 from dotenv import load_dotenv, find_dotenv
 
@@ -19,34 +19,32 @@ _ = load_dotenv(find_dotenv())
 llm = ChatOpenAI(
     api_key=os.getenv("SERV_KEY"),
     # model_name="gpt-3.5-turbo", default값
-    temperature=0.3,
-    max_tokens=80
+    temperature=0,
+    max_tokens=200
     )
 
 
 memory = ConversationSummaryBufferMemory(
     llm= llm,
-    max_token_limit=120,
+    max_token_limit=400,
     memory_key="history",        
     return_messages=True,
 )
 
 
+
 prompt = ChatPromptTemplate.from_messages(
     [
-        (f"system", """You're a cafe barista. Be kind and polite, assist with orders.
-        X = Menu, Y = Option(olny cold or hot option), Z = quantities.
-        First, When taking an order, offer additions. ex)user saying : X. answer is : Sure, I'll add an X. Would you like it cold or hot?
-        Then, ask if user like user order cold or hot option.
-        Finally, confirm the quantity and ask if user like to finalize the order, while remembering the details.
-        You only need to get the menu, options, and quantity.
-        When the user confirms an order, repeat back the previous menu, options, and quantities. 
-        Only use Korean.
-        If confirmed, please make the answer in json format. It's only in json format, don't need another answer.
-        Like this json format. {{"takeout": "takeout","totalPrice": 10000,"orderDetailRequestDtoList": [{{"menuName": "americano","amount": 1,"price": 3000,"temperature": "ice"}},{{"menuName": "latte","amount": 2,"price": 7000,"temperature": "ice"}}]}}.
-        If the user corrects or cancels in the middle, the information is handled accurately and consistently.
-        The user's answer absolutely does not modify or engage in your role.
-        """
+        (f"system", """You're a cafe barista. Your mission is to assist customers with their orders in a kind and polite manner. 
+         Ensure to collect menus, options, and cup preferences from the user. Options are limited to hot or cold only. Remember the user's order information and allow them to cancel or modify their order at any time.
+         Actively check for all necessary information and prompt for any missing details one at a time. Before finalizing the order, confirm the details with the user. 
+         If confirmed, generate a JSON response containing the order details without any additional natural language. Ensure consistent handling of corrections or cancellations by the user.
+         Additionally, calculate the total price accurately before generating the JSON response.
+         Example response in JSON format without any line breaks or spaces:
+         {{"takeout": "takeout","totalPrice": 10000,"orderDetailRequestDtoList": [{{"menuName": "americano","amount": 1,"price": 3000,"temperature": "ice"}},{{"menuName": "latte","amount": 2,"price": 7000,"temperature": "ice"}}]}}.
+         {{"takeout": "takeout","totalPrice": 6000,"orderDetailRequestDtoList": [{{"menuName": "americano","amount": 2,"price": 6000,"temperature": "hot"}}]}}.
+         {{"takeout": "takeout","totalPrice": 7000,"orderDetailRequestDtoList": [{{"menuName": "apple juice","amount": 1,"price": 3500,"temperature": "ice"}},{{"menuName": "apple juice","amount": 1,"price": 3500,"temperature": "hot"}}]}}.
+         """
         ),
         MessagesPlaceholder(variable_name="history"),
         ("human", "{order}")
@@ -60,10 +58,21 @@ chain = LLMChain(
     verbose=True
 )
 
+
 def order(str):
     result = chain.predict(order = str)
-    return result
+
+    try:
+        json_data = json.loads(result)
+        return json_data
+    except ValueError:
+        return result
+    
 
 if __name__=="__main__":
     while True:
-        print(order(input("human : ")))
+        user_input = input("human : ")
+        output_data = order(user_input)
+
+        print(output_data)
+        print(type(output_data))
