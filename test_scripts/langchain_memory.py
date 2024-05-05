@@ -69,7 +69,35 @@ def order(str):
         return result
     
 
+# 임시 클래스
+class Menu:
+    # 인스턴스 초기화
+    def __init__(self, name, price, description, categoryName):
+        self.name = name
+        self.price = price
+        self.description = description
+        self.categoryName = categoryName
+
+# 원래 메뉴객체 불러들여올것
+# def generate_menu_prompt(menu):
+def generate_menu_prompt():
+    # 관리자 페이지에서 메뉴 등록느낌의, 메뉴 객체 생성
+    menu = Menu("americano", 5500, "쓰지 않은 커피입니다.", "커피")
+    # 등록된 메뉴 가져와서 프롬프트로 입력예정
+    menu_prompt = f'새로운 메뉴 등록. 메뉴명: {menu.name}, 메뉴 가격: {menu.price}, 메뉴 설명: {menu.description}, 메뉴 카테고리: {menu.categoryName}'
+
+
+    return menu_prompt
+
+
+
 if __name__=="__main__":
+
+    # 메뉴 객체 생성후 프롬프트 생성.
+    # 생성된 메뉴 프롬프트는 곧바로 인공지능에게 질문을 건네는 방식.
+    menu_prompt = generate_menu_prompt()
+    order(menu_prompt)
+    
     while True:
         user_input = input("human : ")
         output_data = order(user_input)

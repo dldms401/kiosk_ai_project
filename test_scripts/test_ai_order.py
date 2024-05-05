@@ -32,7 +32,6 @@ memory = ConversationSummaryBufferMemory(
 )
 
 
-
 prompt = ChatPromptTemplate.from_messages(
     [
         (f"system", """You're a cafe barista. Your mission is to assist customers with their orders in a kind and polite manner. 
@@ -58,7 +57,7 @@ chain = LLMChain(
     verbose=True
 )
 
-
+# 호출될 함수. str 사용자 질문을 매개변수로.
 def order(str):
     result = chain.predict(order = str)
 
