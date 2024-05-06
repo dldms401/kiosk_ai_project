@@ -57,13 +57,24 @@ chain = LLMChain(
     verbose=True
 )
 
-# 호출될 함수. str 사용자 질문을 매개변수로.
-def order(str):
-    result = chain.predict(order = str)
 
-    # JSON 포맷으로 변환 가능한지 시도
+# json 포맷으로 변환
+def convert_json(result):
     try:
         json_data = json.loads(result)
         return json_data
     except ValueError:
-        return result
+        ai_result = {"ai_result": result}
+        return ai_result
+
+
+# 호출될 함수. str 사용자 질문을 매개변수로.
+def order(str):
+    result = chain.predict(order = str)
+
+    return convert_json(result)
+    
+
+# 호출될 함수. menu_prompt. 메뉴 추가 프롬프트를 buffermemory내에 저장
+def add_history(menu_prompt):
+    memory.chat_memory.add_ai_message(menu_prompt)
