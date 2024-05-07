@@ -23,134 +23,28 @@ llm = ChatOpenAI(
 
 # 데이터 셋
 examples = [
-    {
-        "order_message": "Americano",
-        "answer": "Sure, I'll add an Americano. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Apple Juice",
-        "answer": "Sure, I'll add apple juice. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Chocolate Latte",
-        "answer": "Sure, I'll add a chocolate latte. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Matcha Latte",
-        "answer": "Sure, I'll add a matcha latte. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Milk tea",
-        "answer": "Sure, I'll add an milk tea. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Green tea",
-        "answer": "Sure, I'll add green tea. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Latte",
-        "answer": "Sure, I'll add a latte. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Vanilla latte",
-        "answer": "Sure, I'll add a vanilla latte. Would you like it cold or hot?"
-    },
-    {
-        "order_message": "Make it cold",
-        "answer": "Sure, I'll add a cold americano. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Cold",
-        "answer": "Sure, I'll add cold apple juice. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Cold",
-        "answer": "Sure, I'll add a cold chocolate Latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Cold",
-        "answer": "Sure, I'll add cold matcha Latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it cold",
-        "answer": "Sure, I'll add a cold milk tea. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Cold",
-        "answer": "Sure, I'll add cold green tea. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Cold",
-        "answer": "Sure, I'll add a cold latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Cold",
-        "answer": "Sure, I'll add cold vanilla latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot Americano. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot apple juice. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot Chocolate Latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot Matcha Latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot milk tea. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot green tea. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot latte. How many cups would you like?"
-    },
-    {
-        "order_message": "Make it Hot",
-        "answer": "Sure, I'll add a hot vanilla latte. How many cups would you like?"
-    },
-    {
-        "order_message": "One cup",
-        "answer": "Sure, I'll add a cold Americano, one cup. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Two cups",
-        "answer": "Sure, I'll add cold apple juice, two cups. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Three cups",
-        "answer": "Sure, I'll add a hot matcha latte, three cups. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Four cups",
-        "answer": "Sure, I'll add hot strawberry juice, four cups. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Five cups",
-        "answer": "Sure, I'll add a cold milk tea, five cups. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Six cups",
-        "answer": "Sure, I'll add cold green tea, six cups. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Seven cups",
-        "answer": "Sure, I'll add a hot latte, Seven cups. Would you like to confirm your order?"
-    },
-    {
-        "order_message": "Eight cups",
-        "answer": "Sure, I'll add hot vanilla latte, eight cups. Would you like to confirm your order?"
-    }
+    {"order_message": "메뉴 알려줘요", 
+     "answer": "죄송합니다, 현재 메뉴는 아직 준비중에 있어요."},
+    {"answer": "(새로운 메뉴 등록. 메뉴명: americano, 메뉴 가격: 6000, 메뉴 설명: 에스프레소에 물을 희석 시켜 만든 음료, 메뉴 카테고리: 커피)", 
+     "order_message": "메뉴 뭐 있어요", 
+     "answer": "현재 아메리카노가 있습니다. 주문하시겠어요?", 
+     "order_message": "아메리카노 뜨겁게 세 잔", 
+     "answer": "뜨거운 아메리카노 세 잔 추가하였어요. 더 필요하신게 있으신가요?", 
+     "order_message": "아니 이대로 주문할께", 
+     "answer": '{"takeout": "takeout", "totalPrice": 18000, "orderDetailRequestDtoList": [{"menuName": "americano","amount": 3,"price": 18000,"temperature": "hot"}]}'},
+    {"answer": "(새로운 메뉴 등록. 메뉴명: latte, 메뉴 가격: 5000, 메뉴 설명: 카페 라떼라 부르기도 하며 우유를 곁들인 커피 음료, 메뉴 카테고리: 커피)", 
+     "order_message": "라떼 설명", 
+     "answer": "라떼는 우유를 곁들인 커피 음료입니다. 가격은 5000원 이고요. 주문하시겠어요?"},
+    {"order_message": "아메리카노", 
+     "answer": "아메리카노는 따뜻하게 드릴까요? 시원하게 드릴까요?", 
+     "order_message": "차갑게", 
+     "answer": "차가운 아메리카노 몇 잔 필요하시나요?", 
+     "order_message": "두 잔", 
+     "answer": "네, 차가운 아메리카노 두 잔 추가하겠습니다. 다른 주문 있으시나요?", 
+     "order_message": "아니요", 
+     "answer": "차가운 아메리카노 두 잔, 주문 확정하시겠습니까?", 
+     "order_message": "네", 
+     "answer": '{"takeout": "takeout", "totalPrice": 8000, "orderDetailRequestDtoList": [{"menuName": "americano","amount": 2,"price": 8000,"temperature": "ice"}]}'},
 ]
 
 
@@ -165,17 +59,9 @@ few_shot_prompt = FewShotChatMessagePromptTemplate(
     example_prompt=example_prompt,
     examples=examples,
 )
-
 final_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", """You're a cafe barista. Be kind and polite, assist with orders.
-        X = menu, Y = option (cold or hot), Z = num
-        When taking an order, offer additions. ex)user saying : X. answer is : Sure, I'll add an X. Would you like it cold or hot?
-        Then, Ask if user like user order cold or hot. ex)user saying : Make it Y. answer is : Sure, I'll add a Y X. How many cups would you like?
-        Then, Finally, confirm the quantity and ask if user like to finalize the order, while remembering the details. ex)user saying : Z cups. answer is : Sure, I'll add a Y X, Z cups. Would you like to confirm your order?
-        When the user confirms an order, I'll repeat back the previous menu, options, and quantities. 
-        Once a user places an order, it should never be altered to something else.
-        Only use Korean."""
+        ("system", """You're a coffee shop attendant. Respond to customer orders."""
         ),
         few_shot_prompt,
         ("human", "{order_message}"),

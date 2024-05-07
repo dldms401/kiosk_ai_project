@@ -19,14 +19,19 @@ _ = load_dotenv(find_dotenv())
 llm = ChatOpenAI(
     api_key=os.getenv("SERV_KEY"),
     # model_name="gpt-3.5-turbo", default값
-    temperature=0,
-    max_tokens=200
+    # fine tuning된 모델을 사용. 
+    # venv\Lib\site-packages\langchain_openai\chat_models\base.py
+    # get_num_tokens_from_messages에 새로운 모델 이름 추가해야할것.
+    # 패키지를 수정하는 일은, 배포에 알맞지 않은 방식
+    model_name="ft:gpt-3.5-turbo-0125:personal:cafebot:9Ly4475o",
+    temperature=0.2,
+    # max_tokens=40
     )
 
 
 memory = ConversationSummaryBufferMemory(
     llm= llm,
-    max_token_limit=400,
+    # max_token_limit=40,
     memory_key="history",        
     return_messages=True,
 )
@@ -35,17 +40,7 @@ memory = ConversationSummaryBufferMemory(
 
 prompt = ChatPromptTemplate.from_messages(
     [
-        (f"system", """You're a cafe barista. Your mission is to assist customers with their orders in a kind and polite manner. 
-         Ensure to collect menus, options, and cup preferences from the user. Options are limited to hot or cold only. Remember the user's order information and allow them to cancel or modify their order at any time.
-         Actively check for all necessary information and prompt for any missing details one at a time. Before finalizing the order, confirm the details with the user. 
-         If confirmed, generate a JSON response containing the order details without any additional natural language. Ensure consistent handling of corrections or cancellations by the user.
-         Additionally, calculate the total price accurately before generating the JSON response.
-         Example response in JSON format without any line breaks or spaces:
-         {{"takeout": "takeout","totalPrice": 10000,"orderDetailRequestDtoList": [{{"menuName": "americano","amount": 1,"price": 3000,"temperature": "ice"}},{{"menuName": "latte","amount": 2,"price": 7000,"temperature": "ice"}}]}}.
-         {{"takeout": "takeout","totalPrice": 6000,"orderDetailRequestDtoList": [{{"menuName": "americano","amount": 2,"price": 6000,"temperature": "hot"}}]}}.
-         {{"takeout": "takeout","totalPrice": 7000,"orderDetailRequestDtoList": [{{"menuName": "apple juice","amount": 1,"price": 3500,"temperature": "ice"}},{{"menuName": "apple juice","amount": 1,"price": 3500,"temperature": "hot"}}]}}.
-         """
-        ),
+        (f"system", """You're a coffee shop attendant. Respond to customer orders."""),
         MessagesPlaceholder(variable_name="history"),
         ("human", "{order}")
     ]
@@ -57,6 +52,26 @@ chain = LLMChain(
     prompt=prompt,
     verbose=True
 )
+
+
+# def num_tokens_from_messages(messages, model=ft_cafebot):
+#   """Returns the number of tokens used by a list of messages."""
+#   try:
+#       encoding = tiktoken.encoding_for_model(model)
+#   except KeyError:
+#       encoding = tiktoken.get_encoding("cl100k_base")
+#   if model == ft_cafebot:  # note: future models may deviate from this
+#       num_tokens = 0
+#       for message in messages:
+#           num_tokens += 4  # every message follows <im_start>{role/name}\n{content}<im_end>\n
+#           for key, value in message.items():
+#               num_tokens += len(encoding.encode(value))
+#               if key == "name":  # if there's a name, the role is omitted
+#                   num_tokens += -1  # role is always required and always 1 token
+#       num_tokens += 2  # every reply is primed with <im_start>assistant
+#       return num_tokens
+#   else:
+#       raise NotImplementedError(f"""num_tokens_from_messages() is not presently implemented for model {model}.""")
 
 
 def order(str):
@@ -82,21 +97,22 @@ class Menu:
 # def generate_menu_prompt(menu):
 def generate_menu_prompt():
     # 관리자 페이지에서 메뉴 등록느낌의, 메뉴 객체 생성
-    menu = Menu("americano", 5500, "쓰지 않은 커피입니다.", "커피")
+    menu = Menu("americano", 6500, "쓰지 않은 물탄 커피입니다", "커피")
     # 등록된 메뉴 가져와서 프롬프트로 입력예정
-    menu_prompt = f'새로운 메뉴 등록. 메뉴명: {menu.name}, 메뉴 가격: {menu.price}, 메뉴 설명: {menu.description}, 메뉴 카테고리: {menu.categoryName}'
+    menu_prompt = f'(새로운 메뉴 등록. 메뉴명: {menu.name}, 메뉴 가격: {menu.price}, 메뉴 설명: {menu.description}, 메뉴 카테고리: {menu.categoryName})'
 
 
     return menu_prompt
 
-
+def add_history(menu_prompt):
+    memory.chat_memory.add_ai_message(menu_prompt)
 
 if __name__=="__main__":
 
     # 메뉴 객체 생성후 프롬프트 생성.
     # 생성된 메뉴 프롬프트는 곧바로 인공지능에게 질문을 건네는 방식.
     menu_prompt = generate_menu_prompt()
-    order(menu_prompt)
+    add_history(menu_prompt)
     
     while True:
         user_input = input("human : ")
