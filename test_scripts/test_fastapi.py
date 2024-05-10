@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 
 # Pydantic 모델들 정의
-from data_models import Menu, UserScript
+from data_models import Menu, UserScript, SearchKeywords
 
 # 다른 scr 에서 호출될 함수들
 from test_ai_face_recog import recog
@@ -48,6 +48,16 @@ async def add_menu(menu:Menu):
     add_history(menu_prompt)
 
     return {"message" : "add success"}
+
+
+# 중년층 키워드 선택후 AI search
+@app.post("/fast/api/search")
+async def search_menu(search_keywords:SearchKeywords):
+
+    ingredients_str = ','.join(search_keywords.ingredients)
+    result = order('[' + ingredients_str + ']')
+
+    return result
 
 
 # chatgpt 응답
