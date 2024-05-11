@@ -3,8 +3,7 @@ from fastapi import FastAPI, UploadFile, File
 from data_models import Menu, UserScript, SearchKeywords
 
 from face_recognition.test_ai_face_recog import recog
-from order.test_ai_order import add_history
-from order.test_ai_order import order
+from order.test_ai_order import add_history, order
 
 from PIL import Image
 
@@ -33,7 +32,7 @@ async def analyze_image(file: UploadFile = File(...)):
 @app.post("/add-menu")
 async def add_menu(menu:Menu):
 
-    menu_prompt = f'새로운 메뉴가 등록되었습니다. 메뉴명: {menu.name}, 메뉴 가격: {menu.price}, 메뉴 설명: {menu.description}, 메뉴 카테고리: {menu.categoryName}'
+    menu_prompt = f'(메뉴명: {menu.name}, 메뉴 가격: {menu.price}, 메뉴 설명: {menu.description}, 메뉴 카테고리: {menu.categoryName}, imgPath: {menu.imagePath})'
 
     # langchain의 buffermemory에 저장
     add_history(menu_prompt)

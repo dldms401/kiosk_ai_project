@@ -1,4 +1,4 @@
-from data_models import SearchKeywords
+from domain.data_models import SearchKeywords
 from typing import List
 
 def ingredients_to_string(search_keywords: SearchKeywords) -> str:

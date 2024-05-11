@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 # langchain의 퓨샷 템플릿 활용한 chatgpt모델 사용
-from langchain_fewshot import order
+from langchain.langchain_fewshot import order
 
 import os
 from dotenv import load_dotenv, find_dotenv

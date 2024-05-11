@@ -1,8 +1,7 @@
 from langchain_openai.chat_models import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
 
 from langchain.chains import LLMChain
-from langchain.prompts import MessagesPlaceholder
+from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.memory import ConversationSummaryBufferMemory
 
 import json
@@ -17,6 +16,7 @@ llm = ChatOpenAI(
     model_name="ft:gpt-3.5-turbo-0125:personal:cafebot:9Ly4475o",
 
     # get_num_tokens_from_messages() 오류 해결
+    # tiktoken_model_name 토큰수 계산될 모델
     tiktoken_model_name="gpt-3.5-turbo",
     temperature=0.2,
     )
