@@ -32,7 +32,7 @@ async def analyze_image(file: UploadFile = File(...)):
 @app.post("/add-menu")
 async def add_menu(menu:Menu):
 
-    menu_prompt = f'(메뉴명: {menu.name}, 메뉴 가격: {menu.price}, 메뉴 설명: {menu.description}, 메뉴 카테고리: {menu.categoryName}, imgPath: {menu.imagePath})'
+    menu_prompt = f'(name: {menu.name}, price: {menu.price}, description: {menu.description}, categoryName: {menu.categoryName}, imgPath: {menu.imagePath})'
 
     # langchain의 buffermemory에 저장
     add_history(menu_prompt)
