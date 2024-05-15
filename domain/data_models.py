@@ -18,3 +18,12 @@ class Menu(BaseModel):
 # 키워드 리스트
 class SearchKeywords(BaseModel):
     ingredients: List[str]
+
+
+# 학습 테스트용
+class AddMenuTest(BaseModel):
+    id: int
+    name: str
+    price: float
+    description: str
+    categoryName: str

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 
-from data_models import Menu, UserScript, SearchKeywords
+from data_models import Menu, UserScript, SearchKeywords, AddMenuTest
 
 from face_recognition.test_ai_face_recog import recog
 from order.test_ai_order import add_history, order
@@ -38,6 +38,20 @@ async def add_menu(menu:Menu):
     add_history(menu_prompt)
 
     return {"message" : "add success"}
+
+#--------
+# 임의 테스트
+@app.post("/add-menuKey")
+async def add_menu(menu:AddMenuTest):
+
+    menu_prompt = f'(id: {menu.id}, name: {menu.name}, price: {menu.price}, description: {menu.description}, categoryName: {menu.categoryName})'
+
+    # langchain의 buffermemory에 저장
+    add_history(menu_prompt)
+
+    return {"message" : "add success"}
+#--------
+
 
 
 # 키워드 선택후 AI search

@@ -2,7 +2,7 @@ from langchain_openai.chat_models import ChatOpenAI
 
 from langchain.chains import LLMChain
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.memory import ConversationSummaryBufferMemory
+from langchain.memory import ConversationSummaryBufferMemory, ConversationBufferMemory
 
 import json
 import os
@@ -13,8 +13,10 @@ _ = load_dotenv(find_dotenv())
 llm = ChatOpenAI(
     api_key=os.getenv("SERV_KEY"),
     # model_name="gpt-3.5-turbo", default값
-    model_name="ft:gpt-3.5-turbo-0125:personal:cafebot:9Ly4475o",
-
+    #model_name="ft:gpt-3.5-turbo-0125:personal:cafebot:9Ly4475o",
+    #model_name="ft:gpt-3.5-turbo-0125:personal:cafebot1-2:9Oer7XRM",
+    model_name="ft:gpt-3.5-turbo-0125:personal:cafebot-keysearch:9Orl9xJQ",
+    
     # get_num_tokens_from_messages() 오류 해결
     # tiktoken_model_name 토큰수 계산될 모델
     tiktoken_model_name="gpt-3.5-turbo",
@@ -22,16 +24,24 @@ llm = ChatOpenAI(
     )
 
 
-memory = ConversationSummaryBufferMemory(
+memory = ConversationBufferMemory(
     llm= llm,
-    max_token_limit=400,
     memory_key="history",        
     return_messages=True,
 )
 
+# memory = ConversationSummaryBufferMemory(
+#     llm= llm,
+#     memory_key="history",        
+#     return_messages=True,
+# )
+
 prompt = ChatPromptTemplate.from_messages(
     [
-        (f"system", """You're a coffee shop attendant. Respond to customer orders."""),
+        (f"system", """As a coffee shop bot responding to customer orders, if a sentence containing square brackets with keywords is input, please select all relevant items from the registered menus based on the keywords. 
+         Provide the ids in ascending order and format it into JSON. Items enclosed in parentheses signify menu registration. 
+         For any other input without brackets, handle the order conversationally as a human would.
+         """),
         MessagesPlaceholder(variable_name="history"),
         ("human", "{order}")
     ]
